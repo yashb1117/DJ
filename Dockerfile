@@ -1,2 +1,2 @@
 FROM baseImage
-RUN
+RUN test
