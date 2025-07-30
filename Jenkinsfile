@@ -1,13 +1,13 @@
 pipeline{
     agent any
     tools{
-        jdk 'java-11'
-        maven 'maven'
+        jdk 'JDK11'
+        maven 'Maven'
     }
     stages{
         stage('git checkout'){
             steps{
-                git branch: ' ', urls: ''
+                git branch: 'main', urls: 'https://github.com/yashb1117/DJ.git'
             }
         }
 
@@ -23,23 +23,31 @@ pipeline{
         }
         stage('Dockerbuild and tag'){
             steps{
-                sh "docker build -t manojkrishnappa/project-1 ."
+                sh "docker build -t yashb1117/project-2 ."
             }
         }
         stage('containerie'){
             steps{
-                sh "docker run -it -d -p 9000:8080 manojkrishnappa/project-1 "
+                sh "docker run -it -d -p 9004:8080 yashb1117/project-2 "
             }
         }           
 
-        stage('Dockerlogin'){
-            steps{
-                sh "docker run -it -d -p 9000:8080 manojkrishnappa/project-1 "
+        stage('Docker Login') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKERHUB_USERNAME',
+                        passwordVariable: 'DOCKERHUB_PASSWORD'
+                    )]) {
+                        sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+                    }
+                }
             }
-        }    
+        }
         stage('Dockerpsuh'){
             steps{
-                sh "docker push manojkrishnappa/project-1 "
+                sh "docker push yashb1117/project-2 "
             }
         }    
     }
