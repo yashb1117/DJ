@@ -11,16 +11,7 @@ pipeline{
             }
         }
 
-        stage('compile'){
-            steps{
-                sh "mvn compile"
-            }
-        }
-        stage('Build'){
-            steps{
-                sh "mvn clean install"
-            }
-        }
+    
         stage('Dockerbuild and tag'){
             steps{
                 sh "docker build -t yashb1117/project-2 ."
